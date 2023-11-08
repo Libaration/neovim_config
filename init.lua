@@ -43,7 +43,6 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -78,6 +77,7 @@ require('lazy').setup({
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
+
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -109,6 +109,9 @@ require('lazy').setup({
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
     },
+  },
+  {
+    'nvimdev/lspsaga.nvim',
   },
 
   -- Useful plugin to show you pending keybinds.
@@ -307,10 +310,23 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 
 
+--LSPSAGA
+local status, saga = pcall(require, "lspsaga")
+if (not status) then return end
 
+saga.setup( {
+  server_filetype_map = {
+    typescript = 'typescript'
+  }
+})
 
-
--- [[ Configure Telescope ]]
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<C-j>', '<Cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+vim.keymap.set('n', 'K', '<Cmd>Lspsaga hover_doc<CR>', opts)
+vim.keymap.set('n', 'gd', '<Cmd>Lspsaga lsp_finder<CR>', opts)
+vim.keymap.set('i', '<C-k>', '<Cmd>Lspsaga signature_help<CR>', opts)
+vim.keymap.set('n', 'gp', '<Cmd>Lspsaga preview_definition<CR>', opts)
+vim.keymap.set('n', 'gr', '<Cmd>Lspsaga rename<CR>', opts) -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 local lga_actions = require("telescope-live-grep-args.actions")
 require('telescope').setup {
@@ -470,7 +486,15 @@ vim.defer_fn(function()
     },
   }
 end, 0)
+local status, autotag = pcall(require, "nvim-ts-autotag")
+if (not status) then return end
+autotag.setup({})
+local status, autopairs = pcall(require, "nvim-autopairs")
+if (not status) then return end
 
+autopairs.setup({
+  disable_filetype = { "TelescopePrompt" , "vim" },
+})
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -565,7 +589,7 @@ require("copilot").setup({
     suggestion= {
     auto_trigger = true,
     keymap = {
-      accept = "<M-Tab>",
+      accept = "<A-Tab>",
     },
   }
 })
