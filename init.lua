@@ -319,7 +319,12 @@ if (not status) then return end
 
 saga.setup( {
   server_filetype_map = {
-    typescript = 'typescript'
+    typescript = 'typescript',
+    python = 'pyright',
+    rust = 'rust_analyzer',
+    lua = 'lua_ls',
+    go = 'gopls',
+    cpp = 'clangd',
   }
 })
 
@@ -329,7 +334,12 @@ vim.keymap.set('n', 'K', '<Cmd>Lspsaga hover_doc<CR>', opts)
 vim.keymap.set('n', 'gd', '<Cmd>Lspsaga lsp_finder<CR>', opts)
 vim.keymap.set('i', '<C-k>', '<Cmd>Lspsaga signature_help<CR>', opts)
 vim.keymap.set('n', 'gp', '<Cmd>Lspsaga preview_definition<CR>', opts)
-vim.keymap.set('n', 'gr', '<Cmd>Lspsaga rename<CR>', opts) -- [[ Configure Telescope ]]
+vim.keymap.set('n', 'gr', '<Cmd>Lspsaga rename<CR>', opts)
+-- open neo tree buffer list 
+vim.keymap.set('n', '<leader>,', '<Cmd>Neotree buffers toggle<CR>', opts)
+-- close current buffer 
+vim.keymap.set('n', '<leader>q', '<Cmd>bd<CR>', opts)
+-- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 local lga_actions = require("telescope-live-grep-args.actions")
 require('telescope').setup {
@@ -431,7 +441,7 @@ vim.defer_fn(function()
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+    auto_install = true,
     highlight = { enable = true },
     indent = { enable = true },
     incremental_selection = {
@@ -515,6 +525,16 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+  --function to sort imports in js/tsx files
+  local function organize_imports()
+    local params = {
+      command = "_typescript.organizeImports",
+      arguments = {vim.api.nvim_buf_get_name(0)},
+      title = ""
+    }
+    vim.lsp.buf.execute_command(params)
+  end
+
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
@@ -541,8 +561,14 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+  nmap('<leader>ff', '<Cmd>:Format<CR>' , '[F]ormat current [F]ile')
+ -- create a command to run organizeImports function 
+  vim.api.nvim_buf_create_user_command(bufnr, 'OrganizeImports', function(_) organize_imports() end, { desc = 'Organize imports' })
+  nmap('<leader>oi', '<Cmd>:OrganizeImports<CR>' , '[O]rganize [I]mports')
 
-
+  -- create command that runs eslint --fix on current buffer
+  -- NOTE: This requires that you have eslint installed locally
+  nmap('<leader>fe', '<Cmd>:!npx eslint --fix %<CR>' , '[F]ormat [E]Eslint')
 end
 
 -- document existing key chains
@@ -592,7 +618,7 @@ require("copilot").setup({
     suggestion= {
     auto_trigger = true,
     keymap = {
-      accept = "<A-Tab>",
+      accept = "<C-f>",
     },
   }
 })
