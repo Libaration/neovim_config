@@ -98,6 +98,15 @@ require('lazy').setup({
     },
   },
 
+ -- Hexokinase ---
+  {
+    'rrethy/vim-hexokinase',
+    config = function()
+      vim.g.Hexokinase_optInPatterns = 'full_hex,rgb,rgba,hsl,hsla'
+      vim.g.Hexokinase_refreshEvents = 'CursorHold,CursorHoldI'
+    end,
+  },
+
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -310,8 +319,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
-
-
 
 --LSPSAGA
 local status, saga = pcall(require, "lspsaga")
@@ -560,11 +567,11 @@ local on_attach = function(_, bufnr)
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
-  nmap('<leader>ff', '<Cmd>:Format<CR>' , '[F]ormat current [F]ile')
+  end, { desc = 'Format current buffer with Prettier' })
+  nmap('<leader>ff', '<Cmd>:Neoformat<CR>' , '[F]ormat current [F]ile')
  -- create a command to run organizeImports function 
   vim.api.nvim_buf_create_user_command(bufnr, 'OrganizeImports', function(_) organize_imports() end, { desc = 'Organize imports' })
-  nmap('<leader>oi', '<Cmd>:OrganizeImports<CR>' , '[O]rganize [I]mports')
+  nmap('<leader>fi', '<Cmd>:OrganizeImports<CR>' , '[F]ormat [I]mports')
 
   -- create command that runs eslint --fix on current buffer
   -- NOTE: This requires that you have eslint installed locally
@@ -622,43 +629,6 @@ require("copilot").setup({
     },
   }
 })
--- Prettier setup
-local status, prettier = pcall(require, "prettier")
-if (not status) then return end
-prettier.setup({
-  bin = 'prettierd', -- or `'prettierd'` (v0.23.3+)
-  filetypes = {
-    "css",
-    "graphql",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "json",
-    "less",
-    "markdown",
-    "scss",
-    "typescript",
-    "typescriptreact",
-    "yaml",
-  },
-})
-prettier.setup({
-  ["null-ls"] = {
-    condition = function()
-      return prettier.config_exists({
-        -- if `false`, skips checking `package.json` for `"prettier"` key
-        check_package_json = true,
-      })
-    end,
-    runtime_condition = function(params)
-      -- return false to skip running prettier
-      return true
-    end,
-    timeout = 5000,
-  }
-})
-
-
 --NULL LS 
 local status, null_ls = pcall(require, "null-ls")
 if (not status) then return end
@@ -671,6 +641,11 @@ null_ls.setup({
     null_ls.builtins.diagnostics.fish
   }
 })
+
+
+
+
+
 -- Toggle file explorer in current directory
 --vim.keymap.set('n', '<leader>.', '<Cmd>Neotree toggle<CR>', { desc = 'Toggle file explorer' })
 -- Open neotree to current open file directory
