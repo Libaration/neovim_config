@@ -327,6 +327,7 @@ if (not status) then return end
 saga.setup( {
   server_filetype_map = {
     typescript = 'typescript',
+    css = 'cssls',
     python = 'pyright',
     rust = 'rust_analyzer',
     lua = 'lua_ls',
@@ -567,8 +568,8 @@ local on_attach = function(_, bufnr)
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with Prettier' })
-  nmap('<leader>ff', '<Cmd>:Neoformat<CR>' , '[F]ormat current [F]ile')
+  end, { desc = 'Format current buffer' })
+  nmap('<leader>ff', '<Cmd>:Format<CR>' , '[F]ormat current [F]ile')
  -- create a command to run organizeImports function 
   vim.api.nvim_buf_create_user_command(bufnr, 'OrganizeImports', function(_) organize_imports() end, { desc = 'Organize imports' })
   nmap('<leader>fi', '<Cmd>:OrganizeImports<CR>' , '[F]ormat [I]mports')
@@ -607,7 +608,14 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
    rust_analyzer = {},
-   tsserver = {},
+   tsserver = {
+					on_attach = function(client)
+						-- this is important, otherwise tsserver will format ts/js
+						-- files which we *really* don't want.
+						client.server_capabilities.documentFormattingProvider = false
+					end,
+				},
+   biome = {},
    html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
