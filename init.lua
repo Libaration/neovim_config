@@ -108,6 +108,14 @@ require('lazy').setup({
   },
 
   {
+    "L3MON4D3/LuaSnip",
+    -- follow latest release.
+    version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+    -- install jsregexp (optional!).
+    build = "make install_jsregexp"
+  },
+
+  {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = {
@@ -172,7 +180,7 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'dracula'
+      vim.cmd.colorscheme 'catppuccin'
     end,
   },
   {
@@ -182,7 +190,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'dracula',
+        theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
       },
