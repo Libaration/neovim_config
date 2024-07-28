@@ -108,11 +108,11 @@ require('lazy').setup({
   },
 
   {
-    "L3MON4D3/LuaSnip",
+    'L3MON4D3/LuaSnip',
     -- follow latest release.
-    version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+    version = 'v2.*', -- Replace <CurrentMajor> by the latest released major (first number of latest release)
     -- install jsregexp (optional!).
-    build = "make install_jsregexp"
+    build = 'make install_jsregexp',
   },
 
   {
@@ -135,7 +135,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -228,10 +228,10 @@ require('lazy').setup({
         end,
       },
       {
-        "nvim-telescope/telescope-live-grep-args.nvim",
+        'nvim-telescope/telescope-live-grep-args.nvim',
         -- This will not install any breaking changes.
         -- For major updates, this must be adjusted manually.
-        version = "^1.0.0",
+        version = '^1.0.0',
       },
     },
   },
@@ -239,20 +239,20 @@ require('lazy').setup({
   -----[[ TMUX / NEOVIM NAVIGATION]]------
 
   {
-    "christoomey/vim-tmux-navigator",
+    'christoomey/vim-tmux-navigator',
     cmd = {
-      "TmuxNavigateLeft",
-      "TmuxNavigateDown",
-      "TmuxNavigateUp",
-      "TmuxNavigateRight",
-      "TmuxNavigatePrevious",
+      'TmuxNavigateLeft',
+      'TmuxNavigateDown',
+      'TmuxNavigateUp',
+      'TmuxNavigateRight',
+      'TmuxNavigatePrevious',
     },
     keys = {
-      { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
-      { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
-      { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
-      { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
-      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+      { '<c-h>', '<cmd><C-U>TmuxNavigateLeft<cr>' },
+      { '<c-j>', '<cmd><C-U>TmuxNavigateDown<cr>' },
+      { '<c-k>', '<cmd><C-U>TmuxNavigateUp<cr>' },
+      { '<c-l>', '<cmd><C-U>TmuxNavigateRight<cr>' },
+      { '<c-\\>', '<cmd><C-U>TmuxNavigatePrevious<cr>' },
     },
   },
 
@@ -285,44 +285,66 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 --
 --
+require('conform').setup()
 -- Harpoon setup
-local harpoon = require("harpoon")
+local harpoon = require 'harpoon'
 
 -- REQUIRED
-harpoon:setup({})
+harpoon:setup {}
 -- REQUIRED
-local conf = require("telescope.config").values
+local conf = require('telescope.config').values
 local function toggle_telescope(harpoon_files)
   local file_paths = {}
   for _, item in ipairs(harpoon_files.items) do
     table.insert(file_paths, item.value)
   end
 
-  require("telescope.pickers").new({}, {
-    prompt_title = "Harpoon",
-    finder = require("telescope.finders").new_table({
-      results = file_paths,
-    }),
-    previewer = conf.file_previewer({}),
-    sorter = conf.generic_sorter({}),
-  }):find()
+  require('telescope.pickers')
+    .new({}, {
+      prompt_title = 'Harpoon',
+      finder = require('telescope.finders').new_table {
+        results = file_paths,
+      },
+      previewer = conf.file_previewer {},
+      sorter = conf.generic_sorter {},
+    })
+    :find()
 end
 
-vim.keymap.set("n", "<leader>.", function() toggle_telescope(harpoon:list()) end,
-  { desc = "Open harpoon window" })
+vim.keymap.set('n', '<leader>.', function()
+  toggle_telescope(harpoon:list())
+end, { desc = 'Open harpoon window' })
 
-vim.keymap.set("n", "<M-a>", function() harpoon:list():append() end)
-vim.keymap.set("n", "<M-d>", function() harpoon:list():remove() end)
-vim.keymap.set("n", "<M-X>", function() harpoon:list():clear() end)
+vim.keymap.set('n', '<M-a>', function()
+  harpoon:list():append()
+end)
+vim.keymap.set('n', '<M-d>', function()
+  harpoon:list():remove()
+end)
+vim.keymap.set('n', '<M-X>', function()
+  harpoon:list():clear()
+end)
 
-vim.keymap.set("n", "<M-1>", function() harpoon:list():select(1) end)
-vim.keymap.set("n", "<M-2>", function() harpoon:list():select(2) end)
-vim.keymap.set("n", "<M-3>", function() harpoon:list():select(3) end)
-vim.keymap.set("n", "<M-4>", function() harpoon:list():select(4) end)
+vim.keymap.set('n', '<M-1>', function()
+  harpoon:list():select(1)
+end)
+vim.keymap.set('n', '<M-2>', function()
+  harpoon:list():select(2)
+end)
+vim.keymap.set('n', '<M-3>', function()
+  harpoon:list():select(3)
+end)
+vim.keymap.set('n', '<M-4>', function()
+  harpoon:list():select(4)
+end)
 
 -- Toggle previous & next buffers stored within Harpoon list
-vim.keymap.set("n", "<M-q>", function() harpoon:list():prev() end)
-vim.keymap.set("n", "<M-w>", function() harpoon:list():next() end)
+vim.keymap.set('n', '<M-q>', function()
+  harpoon:list():prev()
+end)
+vim.keymap.set('n', '<M-w>', function()
+  harpoon:list():next()
+end)
 --
 -- --- TMUX / NEOVIM NAVIGATION KEYBINDSS
 vim.keymap.set('n', '<M-left>', '<Cmd>TmuxNavigateLeft<CR>', { silent = true })
@@ -397,10 +419,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 --LSPSAGA
-local status, saga = pcall(require, "lspsaga")
-if (not status) then return end
+local status, saga = pcall(require, 'lspsaga')
+if not status then
+  return
+end
 
-saga.setup({
+saga.setup {
   server_filetype_map = {
     typescript = 'typescript',
     python = 'pyright',
@@ -410,12 +434,12 @@ saga.setup({
     cpp = 'clangd',
     css = 'cssls',
     tailwindcss = 'tailwindcss',
-  }
-})
+  },
+}
 
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<C-j>', '<Cmd>Lspsaga diagnostic_jump_next<CR>', opts)
-vim.keymap.set('n', 'K', '<Cmd>Lspsaga hover_doc<CR>', opts)
+vim.keymap.set('n', '<leader>l', '<Cmd>Lspsaga hover_doc<CR>', opts)
 vim.keymap.set('n', 'gr', '<Cmd>Lspsaga finder tyd+ref+imp+def<CR>', opts)
 vim.keymap.set('i', '<C-k>', '<Cmd>Lspsaga signature_help<CR>', opts)
 vim.keymap.set('n', 'gp', '<Cmd>Lspsaga preview_definition<CR>', opts)
@@ -427,27 +451,30 @@ vim.keymap.set('n', '<leader>,', '<Cmd>Neotree buffers toggle<CR>', opts)
 vim.keymap.set('n', '<leader>q', '<Cmd>bd<CR>', opts)
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
-local lga_actions = require("telescope-live-grep-args.actions")
+local lga_actions = require 'telescope-live-grep-args.actions'
 require('telescope').setup {
   file_ignore_patterns = {
-    "node_modules", "build", "dist", "yarn.lock",
+    'node_modules',
+    'build',
+    'dist',
+    'yarn.lock',
   },
   extensions = {
     live_grep_args = {
       auto_quoting = true, -- enable/disable auto-quoting
       -- define mappings, e.g.
-      mappings = {         -- extend mappings
+      mappings = { -- extend mappings
         i = {
-          ["<C-k>"] = lga_actions.quote_prompt(),
-          ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
-          ["<C-f>"] = lga_actions.quote_prompt({ postfix = " --iglob 'src/components/**' --iglob '!**.spec.**'" }),
+          ['<C-k>'] = lga_actions.quote_prompt(),
+          ['<C-i>'] = lga_actions.quote_prompt { postfix = ' --iglob ' },
+          ['<C-f>'] = lga_actions.quote_prompt { postfix = " --iglob 'src/components/**' --iglob '!**.spec.**'" },
         },
       },
       -- ... also accepts theme settings, for example:
       -- theme = "dropdown", -- use dropdown theme
-      theme = { "dracula" }, -- use own theme spec
+      theme = { 'dracula' }, -- use own theme spec
       -- layout_config = { mirror=true }, -- mirror preview pane
-    }
+    },
   },
   defaults = {
     mappings = {
@@ -458,16 +485,16 @@ require('telescope').setup {
     },
   },
 }
-local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
-vim.keymap.set('n', "<leader>fw", function()
-  live_grep_args_shortcuts.grep_word_under_cursor({
-    postfix = " --iglob 'src/components/**' --iglob '!**.spec.**'"
-  })
+local live_grep_args_shortcuts = require 'telescope-live-grep-args.shortcuts'
+vim.keymap.set('n', '<leader>fw', function()
+  live_grep_args_shortcuts.grep_word_under_cursor {
+    postfix = " --iglob 'src/components/**' --iglob '!**.spec.**'",
+  }
 end, { desc = '[F]ind [W]ord' })
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
-pcall(require('telescope').load_extension, "live_grep_args")
+pcall(require('telescope').load_extension, 'live_grep_args')
 -- Telescope live_grep in git root
 -- Function to find the git root directory based on the current buffer's path
 local function find_git_root()
@@ -476,17 +503,17 @@ local function find_git_root()
   local current_dir
   local cwd = vim.fn.getcwd()
   -- If the buffer is not associated with a file, return nil
-  if current_file == "" then
+  if current_file == '' then
     current_dir = cwd
   else
     -- Extract the directory from the current file's path
-    current_dir = vim.fn.fnamemodify(current_file, ":h")
+    current_dir = vim.fn.fnamemodify(current_file, ':h')
   end
 
   -- Find the Git root directory from the current file's path
-  local git_root = vim.fn.systemlist("git -C " .. vim.fn.escape(current_dir, " ") .. " rev-parse --show-toplevel")[1]
+  local git_root = vim.fn.systemlist('git -C ' .. vim.fn.escape(current_dir, ' ') .. ' rev-parse --show-toplevel')[1]
   if vim.v.shell_error ~= 0 then
-    print("Not a git repository. Searching on current working directory")
+    print 'Not a git repository. Searching on current working directory'
     return cwd
   end
   return git_root
@@ -496,16 +523,16 @@ end
 local function live_grep_git_root()
   local git_root = find_git_root()
   if git_root then
-    require('telescope.builtin').live_grep({
+    require('telescope.builtin').live_grep {
       search_dirs = { git_root },
-    })
+    }
   end
 end
 
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
 -- See `:help telescope.builtin`
-vim.keymap.set("n", "<leader>'", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
+vim.keymap.set('n', "<leader>'", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set('n', '<leader>;', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
@@ -591,15 +618,19 @@ vim.defer_fn(function()
     },
   }
 end, 0)
-local status, autotag = pcall(require, "nvim-ts-autotag")
-if (not status) then return end
-autotag.setup({})
-local status, autopairs = pcall(require, "nvim-autopairs")
-if (not status) then return end
+local status, autotag = pcall(require, 'nvim-ts-autotag')
+if not status then
+  return
+end
+autotag.setup {}
+local status, autopairs = pcall(require, 'nvim-autopairs')
+if not status then
+  return
+end
 
-autopairs.setup({
-  disable_filetype = { "TelescopePrompt", "vim" },
-})
+autopairs.setup {
+  disable_filetype = { 'TelescopePrompt', 'vim' },
+}
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -620,9 +651,9 @@ local on_attach = function(_, bufnr)
   --function to sort imports in js/tsx files
   local function organize_imports()
     local params = {
-      command = "_typescript.organizeImports",
+      command = '_typescript.organizeImports',
       arguments = { vim.api.nvim_buf_get_name(0) },
-      title = ""
+      title = '',
     }
     vim.lsp.buf.execute_command(params)
   end
@@ -647,13 +678,35 @@ local on_attach = function(_, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer' })
+  -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+  --   vim.lsp.buf.format(
+  --     {
+  --       filter = function(client)
+  --         -- apply whatever logic you want (in this example, we'll only use null-ls)
+  --         return client.name == "conform"
+  --       end,
+  --       bufnr = bufnr,
+  --     }
+  --   )
+  -- end, { desc = 'Format current buffer' })
+
+  vim.api.nvim_create_user_command('Format', function(args)
+    local range = nil
+    if args.count ~= -1 then
+      local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+      range = {
+        start = { args.line1, 0 },
+        ['end'] = { args.line2, end_line:len() },
+      }
+    end
+    require('conform').format { async = true, lsp_format = 'fallback', range = range }
+  end, { range = true, desc = 'Format current buffer' })
+
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ff', '<Cmd>:Format<CR>', { noremap = true, silent = true })
   -- create a command to run organizeImports function
-  vim.api.nvim_buf_create_user_command(bufnr, 'OrganizeImports', function(_) organize_imports() end,
-    { desc = 'Organize imports' })
+  vim.api.nvim_buf_create_user_command(bufnr, 'OrganizeImports', function(_)
+    organize_imports()
+  end, { desc = 'Organize imports' })
   nmap('<leader>fi', '<Cmd>:OrganizeImports<CR>', '[F]ormat [I]mports')
 
   -- create command that runs eslint --fix on current buffer
@@ -690,7 +743,7 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {},
   -- pyright = {},
   rust_analyzer = {},
   tsserver = {
@@ -714,36 +767,18 @@ local servers = {
 -- Setup neovim lua configuration
 require('neodev').setup()
 -- Setup CoPilot
-require("copilot").setup({
+require('copilot').setup {
   suggestion = {
     auto_trigger = true,
     keymap = {
-      accept = "<C-f>",
+      accept = '<C-f>',
     },
-  }
-})
---NULL LS
-local status, null_ls = pcall(require, "null-ls")
-if (not status) then return end
-
-null_ls.setup({
-  sources = {
-    null_ls.builtins.diagnostics.eslint_d.with({
-      diagnostics_format = '[eslint] #{m}\n(#{c})'
-    }),
-    null_ls.builtins.diagnostics.fish
-  }
-})
-
-
-
-
-
+  },
+}
 -- Toggle file explorer in current directory
 --vim.keymap.set('n', '<leader>.', '<Cmd>Neotree toggle<CR>', { desc = 'Toggle file explorer' })
 -- Open neotree to current open file directory
-vim.keymap.set('n', '<leader>>', '<Cmd>Neotree reveal_force_cwd toggle<CR>',
-  { desc = 'Open file explorer to current file' })
+vim.keymap.set('n', '<leader>>', '<Cmd>Neotree reveal_force_cwd toggle<CR>', { desc = 'Open file explorer to current file' })
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
