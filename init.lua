@@ -37,6 +37,7 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
+--
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -135,7 +136,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -248,10 +249,10 @@ require('lazy').setup({
       'TmuxNavigatePrevious',
     },
     keys = {
-      { '<c-h>', '<cmd><C-U>TmuxNavigateLeft<cr>' },
-      { '<c-j>', '<cmd><C-U>TmuxNavigateDown<cr>' },
-      { '<c-k>', '<cmd><C-U>TmuxNavigateUp<cr>' },
-      { '<c-l>', '<cmd><C-U>TmuxNavigateRight<cr>' },
+      { '<c-h>',  '<cmd><C-U>TmuxNavigateLeft<cr>' },
+      { '<c-j>',  '<cmd><C-U>TmuxNavigateDown<cr>' },
+      { '<c-k>',  '<cmd><C-U>TmuxNavigateUp<cr>' },
+      { '<c-l>',  '<cmd><C-U>TmuxNavigateRight<cr>' },
       { '<c-\\>', '<cmd><C-U>TmuxNavigatePrevious<cr>' },
     },
   },
@@ -284,6 +285,8 @@ require('lazy').setup({
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 --
+require("capslock").setup()
+vim.keymap.set({ "i", "c", "n" }, "<M-\\>", "<Plug>CapsLockToggle")
 --
 require('conform').setup()
 -- Harpoon setup
@@ -300,15 +303,15 @@ local function toggle_telescope(harpoon_files)
   end
 
   require('telescope.pickers')
-    .new({}, {
-      prompt_title = 'Harpoon',
-      finder = require('telescope.finders').new_table {
-        results = file_paths,
-      },
-      previewer = conf.file_previewer {},
-      sorter = conf.generic_sorter {},
-    })
-    :find()
+      .new({}, {
+        prompt_title = 'Harpoon',
+        finder = require('telescope.finders').new_table {
+          results = file_paths,
+        },
+        previewer = conf.file_previewer {},
+        sorter = conf.generic_sorter {},
+      })
+      :find()
 end
 
 vim.keymap.set('n', '<leader>.', function()
@@ -316,12 +319,12 @@ vim.keymap.set('n', '<leader>.', function()
 end, { desc = 'Open harpoon window' })
 
 vim.keymap.set('n', '<M-a>', function()
-  harpoon:list():append()
+  harpoon:list():add()
 end)
 vim.keymap.set('n', '<M-d>', function()
   harpoon:list():remove()
 end)
-vim.keymap.set('n', '<M-X>', function()
+vim.keymap.set('n', '<M-x>', function()
   harpoon:list():clear()
 end)
 
@@ -463,7 +466,7 @@ require('telescope').setup {
     live_grep_args = {
       auto_quoting = true, -- enable/disable auto-quoting
       -- define mappings, e.g.
-      mappings = { -- extend mappings
+      mappings = {         -- extend mappings
         i = {
           ['<C-k>'] = lga_actions.quote_prompt(),
           ['<C-i>'] = lga_actions.quote_prompt { postfix = ' --iglob ' },
@@ -778,7 +781,8 @@ require('copilot').setup {
 -- Toggle file explorer in current directory
 --vim.keymap.set('n', '<leader>.', '<Cmd>Neotree toggle<CR>', { desc = 'Toggle file explorer' })
 -- Open neotree to current open file directory
-vim.keymap.set('n', '<leader>>', '<Cmd>Neotree reveal_force_cwd toggle<CR>', { desc = 'Open file explorer to current file' })
+vim.keymap.set('n', '<leader>>', '<Cmd>Neotree reveal_force_cwd toggle<CR>',
+  { desc = 'Open file explorer to current file' })
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
